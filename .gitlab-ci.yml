@@ -1,0 +1,27 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_NAME: registry.gitlab.com/sushant.kumar.pandey/rephrasefluxki
+  KUBECONFIG: /root/.kube/config
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t $IMAGE_NAME:latest .
+    - docker push $IMAGE_NAME:latest
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f deploy/deployment.yaml
+    - kubectl apply -f deploy/service.yaml
+  only:
+    - main
