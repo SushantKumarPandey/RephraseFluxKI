@@ -1,27 +1,38 @@
-image: docker:latest
-
-services:
-  - docker:dind
+image: "thlmylab/swakkd:stable"
 
 variables:
-  DOCKER_DRIVER: overlay2
-  IMAGE_NAME: registry.gitlab.com/sushant.kumar.pandey/rephrasefluxki
-  KUBECONFIG: /root/.kube/config
+  PRIME: "yes"
+  CACHE: "persistent"  # Simplified to always use persistent cache
 
 stages:
+  - prepare
   - build
   - deploy
 
-build:
-  stage: build
+prepare:
+  stage: prepare
   script:
-    - docker build -t $IMAGE_NAME:latest .
-    - docker push $IMAGE_NAME:latest
+    - kubectl delete secret gitlab-registry-credentials || true
+    - kubectl create secret docker-registry gitlab-registry-credentials \
+        --docker-server=$CI_REGISTRY \
+        --docker-username=image-registry \
+        --docker-password=$CI_REGISTRY_TOKEN
+
+build-prime:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - cd prime
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE/prime:latest .
+    - docker push $CI_REGISTRY_IMAGE/prime:latest
 
 deploy:
   stage: deploy
   script:
-    - kubectl apply -f deploy/deployment.yaml
-    - kubectl apply -f deploy/service.yaml
-  only:
-    - main
+    # Deploy Prime Service and Redis Cache
+    - kubectl apply -f deploy/prime/prime.yaml  # Combined YAML file for prime service
+    - kubectl apply -f deploy/persistent-redis.yaml
+    - kubectl apply -f deploy/storage.yaml

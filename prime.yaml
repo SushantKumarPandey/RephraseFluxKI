@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prime-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prime
+  template:
+    metadata:
+      labels:
+        app: prime
+    spec:
+      containers:
+      - name: prime
+        image:image: git.mylab.th-luebeck.de:4181/sushant.kumar.pandey/rephrasefluxki:latest
+        ports:
+        - containerPort: 80

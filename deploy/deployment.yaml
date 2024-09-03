@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rephrasefluxki
+  labels:
+    app: rephrasefluxki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rephrasefluxki
+  template:
+    metadata:
+      labels:
+        app: rephrasefluxki
+    spec:
+      containers:
+      - name: rephrasefluxki
+        image: registry.gitlab.com/sushant.kumar.pandey/rephrasefluxki:latest
+        ports:
+        - containerPort: 8501

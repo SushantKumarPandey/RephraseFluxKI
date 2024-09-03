@@ -1,10 +1,17 @@
+# Use the official Python image from the Docker Hub
 FROM python:3.11
 
+# Set the working directory in the container
 WORKDIR /app
 
-ADD requirements.txt .
+# Copy the requirements file into the container
+COPY requirements.txt .
+
+# Install the dependencies
 RUN pip install -r requirements.txt
 
-CMD ["streamlit", "run", "app.py", "--server.address", "0.0.0.0", "--server.fileWatcherType", "none"]
+# Copy the Streamlit app into the container
+COPY app.py .
 
-ADD app.py .
+# Set the command to run the Streamlit app
+CMD ["streamlit", "run", "app.py", "--server.address", "0.0.0.0"]
