@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rephrasefluxki
+  name: rephrasefluxki-deployment
   labels:
     app: rephrasefluxki
 spec:
-  replicas: 1
+  replicas: 3  # Number of pods
   selector:
     matchLabels:
       app: rephrasefluxki
@@ -16,6 +16,29 @@ spec:
     spec:
       containers:
       - name: rephrasefluxki
-        image: registry.gitlab.com/sushant.kumar.pandey/rephrasefluxki:latest
+        image: your-docker-image  # Replace with your Docker image
         ports:
-        - containerPort: 8501
+        - containerPort: 8000  # The port where your FastAPI app is running
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        readinessProbe:
+          httpGet:
+            path: /  # Health check endpoint
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /  # Health check endpoint
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---

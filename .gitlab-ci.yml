@@ -15,8 +15,8 @@ prepare:
     - kubectl delete secret gitlab-registry-credentials || true
     - kubectl create secret docker-registry gitlab-registry-credentials \
         --docker-server=$CI_REGISTRY \
-        --docker-username=image-registry \
-        --docker-password=$CI_REGISTRY_TOKEN
+        --docker-username=$CI_REGISTRY_USER \
+        --docker-password=$CI_REGISTRY_PASSWORD
 
 build-prime:
   stage: build
@@ -32,7 +32,6 @@ build-prime:
 deploy:
   stage: deploy
   script:
-    # Deploy Prime Service and Redis Cache
     - kubectl apply -f deploy/prime/prime.yaml  # Combined YAML file for prime service
     - kubectl apply -f deploy/persistent-redis.yaml
     - kubectl apply -f deploy/storage.yaml

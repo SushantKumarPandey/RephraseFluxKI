@@ -4,9 +4,10 @@ metadata:
   name: rephrasefluxki-service
 spec:
   selector:
-    app: rephrasefluxki
+    app: rephrasefluxki  # This should match the labels in your deployment.yaml
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8501
-  type: LoadBalancer
+      port: 80  # Expose on port 80
+      targetPort: 8000  # Forward to your FastAPI app's port
+  type: LoadBalancer  # Can also be NodePort or ClusterIP, depending on your needs
+

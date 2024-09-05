@@ -20,4 +20,4 @@ if st.button("Paraphrase"):
         except Exception as e:
             st.write(f"Error occurred: {e}")
     else:
-        st.write("Please enter some text.")
+        st.write("Please enter some text.")
