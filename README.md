@@ -1,4 +1,35 @@
 # RephraseFluxKI
+Description
+RephraseFluxKI is a paraphrasing app similar to ChatGPT and other AI tools. I created this project as a practice exercise to enhance my skills in building applications using AI technologies.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
